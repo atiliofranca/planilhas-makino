@@ -1,0 +1,8 @@
+# ignorar arquivos com extensão .csv
+*.csv
+
+# ignorar arquivos com extensão .xlsx
+*.xlsx
+
+# ignorar arquivos com extensão .png
+*.png
