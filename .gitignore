@@ -9,3 +9,6 @@ venv/
 
 # ignorar arquivos com extensão .png
 *.png
+
+# ignorar arquivos com extensão .dat
+*.dat

@@ -22,10 +22,10 @@ def arredondamento_personalizado(numero):
         return float(numero)
 
 # --- CONFIGURAÇÃO ---
-nome_arquivo_1 = 'arquivo1.csv'
-nome_arquivo_2 = 'arquivo2.xlsx'
-nome_arquivo_saida_excel = 'new-arquivo1.xlsx'
-nome_arquivo_saida_autcom_csv = 'new-arquivo1-autcom.csv'
+nome_arquivo_1 = 'preco-pecas-stihl/arquivo1.csv'
+nome_arquivo_2 = 'preco-pecas-stihl/arquivo2.xlsx'
+nome_arquivo_saida_excel = 'preco-pecas-stihl/new-arquivo1.xlsx'
+nome_arquivo_saida_autcom_csv = 'preco-pecas-stihl/new-arquivo1-autcom.csv'
 
 # --- LEITURA DAS PLANILHAS ---
 try:
@@ -98,7 +98,16 @@ except Exception as e:
 try:
     print(f"Iniciando reestruturação para o arquivo '{nome_arquivo_saida_autcom_csv}'...")
     df_para_autcom = df1.copy()
+
+    # Esta função garante que o valor seja um inteiro (para remover .0 se for float),
+    # depois converte para string e preenche com zeros à esquerda até ter 7 dígitos.
+    # Se o valor for nulo/vazio (NaN), ele será mantido como um texto vazio.
+    df_para_autcom['Cód.Item'] = df_para_autcom['Cód.Item'].apply(
+        lambda x: str(int(x)).zfill(7) if pd.notna(x) and x != '' else ''
+    )
+    # ------------------------------------------------------------------
     
+    # 1. FORMATA OS NÚMEROS DE PREÇO/IPI PARA TEREM VÍRGULA
     colunas_para_formatar = colunas_para_alterar_valor_c + [coluna_para_alterar_valor_i] + ['Novo Pr.Compra']
     for col in colunas_para_formatar:
         if col in df_para_autcom.columns:
@@ -106,10 +115,12 @@ try:
                 lambda x: f'{x:g}'.replace('.', ',') if isinstance(x, (int, float)) else x
             )
             
+    # 2. APAGA AS COLUNAS INDESEJADAS
     colunas_para_apagar = ['Novo Departamento', 'Desc. Departamento', 'Unnamed: 14']
     colunas_existentes_para_apagar = [col for col in colunas_para_apagar if col in df_para_autcom.columns]
     df_para_autcom.drop(columns=colunas_existentes_para_apagar, inplace=True)
 
+    # 3. REESTRUTURA OS DADOS
     mapeamento_posicoes = {
         'Cód.Item': 0, 'Descrição': 6, 'Referência': 9, 'Novo Pr.Compra': 34,
         'Novo IPI Entrada': 43, 'Novo Pr. Venda 1': 55, 'Novo Pr. Venda 2': 58,
@@ -123,11 +134,13 @@ try:
     todas_as_colunas = range(74)
     df_reestruturado = df_reestruturado.reindex(columns=todas_as_colunas)
 
+    # 4. CRIA E APLICA O CABEÇALHO PERSONALIZADO
     cabecalho_final = [''] * 74
     for nome_coluna, nova_posicao in mapeamento_posicoes.items():
         cabecalho_final[nova_posicao] = nome_coluna
     df_reestruturado.columns = cabecalho_final
 
+    # 5. SALVA O ARQUIVO REESTRUTURADO COM O NOVO CABEÇALHO
     df_reestruturado.to_csv(nome_arquivo_saida_autcom_csv, index=False, sep=';', encoding='latin-1', header=True)
     print(f"Arquivo CSV para Autcom (reestruturado e com cabeçalho) foi salvo como '{nome_arquivo_saida_autcom_csv}'.")
 
