@@ -1,3 +1,6 @@
+# ignorar pasta venv
+venv/
+
 # ignorar arquivos com extensão .csv
 *.csv
 
