@@ -19,8 +19,9 @@ No Windows (PowerShell/CMD):
 se no windows surgir um erro, impedindo que esse comando seja carregado porque a execução de scripts foi desabilitada no sistema, usar o seguinte comando antes:
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 
-Depois de criado, você verá (venv) aparecer no início do seu prompt do terminal, indicando que o ambiente virtual está ativo
+depois de criado, você verá (venv) aparecer no início do seu prompt do terminal, indicando que o ambiente virtual está ativo
+
+depois desses passos, se ainda estiver com problemas quanto ao interpretador (venv), aperte ctrl + shift + p, pesquise a opção 'Python: Select Interpreter' e selecione a pasta venv que foi criada
 
 Passo 3 - Instale as bibliotecas dentro do seu ambiente virtual:
-
 pip install -r requirements.txt
