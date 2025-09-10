@@ -1,6 +1,7 @@
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
+from screeninfo import get_monitors
 
 # --- FUNÇÕES AUXILIARES ---
 
@@ -24,6 +25,23 @@ def letra_para_indice(letra):
     for char in letra:
         indice = indice * 26 + (ord(char) - ord('A') + 1)
     return indice - 1
+
+def centralizar_janela_raiz(root):
+    """Detecta o monitor principal e posiciona a janela raiz para centralizar os pop-ups."""
+    try:
+        monitor_principal = next(m for m in get_monitors() if m.is_primary)
+    except StopIteration:
+        monitor_principal = get_monitors()[0]
+    
+    largura_tela = monitor_principal.width
+    altura_tela = monitor_principal.height
+    offset_x = monitor_principal.x
+    offset_y = monitor_principal.y
+
+    pos_x = offset_x + (largura_tela // 2)
+    pos_y = offset_y + (altura_tela // 2)
+
+    root.geometry(f'+{pos_x}+{pos_y}')
 
 # --- CONFIGURAÇÃO ---
 nome_arquivo_saida_excel = 'stihl/new-stihl16.xlsx'
@@ -52,6 +70,8 @@ root = tk.Tk()
 root.withdraw()
 
 print("Por favor, selecione os arquivos de entrada nas janelas pop-up...")
+
+centralizar_janela_raiz(root)
 
 nome_arquivo_1 = filedialog.askopenfilename(
     title="Passo 1 de 2: Selecione o arquivo.csv importado do Autcom (Lista Base)",
@@ -137,8 +157,8 @@ for index, linha_df1 in df1.iterrows():
             # 2. Calcula os preços que dependem diretamente da Venda 4
             valor_venda_1 = arredondamento_personalizado(valor_venda_4 * 1.07)  # +7%
             valor_venda_5 = arredondamento_personalizado(valor_venda_4 * 0.98)  # -2%
-            valor_venda_6 = valor_venda_4  # Igual a Venda 4
-            valor_venda_7 = valor_venda_4  # Igual a Venda 4
+            valor_venda_6 = valor_venda_1  # Igual a Venda 1
+            valor_venda_7 = valor_venda_1  # Igual a Venda 1
             
             # 3. Calcula os preços que dependem dos resultados anteriores
             valor_venda_2 = arredondamento_personalizado(valor_venda_1 * 0.98)  # -2% de Venda 1
@@ -146,7 +166,7 @@ for index, linha_df1 in df1.iterrows():
             
             # 4. Cálculos de compra e frete (continuam os mesmos)
             valor_final_compra = valor_como_numero * 0.67
-            valor_final_frete = valor_como_numero * 0.0015
+            valor_final_frete = valor_como_numero * 0.015
             
         except (ValueError, TypeError):
             # Em caso de erro, preenche todos os campos com o valor original para evitar falhas
