@@ -3,6 +3,9 @@ import tkinter as tk
 from tkinter import filedialog
 from screeninfo import get_monitors
 
+# ESSE ERA O SCRIPT ANTES DE MUDAR DE PLANILHA. ESSE FUNCIONA PERFEITAMENTE
+# FAZ A TROCA DO PREÇO E IPI PELA PLANILHA COM FOTOS E VÁRIAS ABAS DA STIHL
+
 # --- FUNÇÕES AUXILIARES ---
 
 def arredondamento_personalizado(numero):
