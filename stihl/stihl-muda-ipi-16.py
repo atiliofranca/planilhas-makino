@@ -139,7 +139,7 @@ except Exception as e:
 
 # --- PROCESSAMENTO PRINCIPAL ---
 indices_modificados = []
-indices_ignorados = [] # NOVO: Lista para rastrear as linhas ignoradas
+indices_ignorados = [] # Lista para rastrear as linhas ignoradas
 df1['Preço Real Stihl'] = pd.NA
 
 colunas_venda = [
@@ -151,7 +151,7 @@ colunas_venda = [
 for index, linha_df1 in df1.iterrows():
     valor_a_procurar = linha_df1['Referência']
     
-    # NOVO: VERIFICAÇÃO DE EXCEÇÃO
+    # VERIFICAÇÃO DE EXCEÇÃO
     if valor_a_procurar in REFERENCIAS_PARA_IGNORAR:
         print(f"Aviso: Referência '{valor_a_procurar}' (linha {index + 2}) está na lista de exceções. Será colorida de vermelho e não será alterada.")
         indices_ignorados.append(index)
@@ -169,8 +169,8 @@ for index, linha_df1 in df1.iterrows():
             valor_venda_4 = arredondamento_personalizado(valor_como_numero)
             valor_venda_1 = arredondamento_personalizado(valor_venda_4 * 1.07)
             valor_venda_5 = arredondamento_personalizado(valor_venda_4 * 0.98)
-            valor_venda_6 = valor_venda_4
-            valor_venda_7 = valor_venda_4
+            valor_venda_6 = valor_venda_1
+            valor_venda_7 = valor_venda_1
             valor_venda_2 = arredondamento_personalizado(valor_venda_1 * 0.98)
             valor_venda_3 = arredondamento_personalizado(valor_venda_2 * 0.98)
             
